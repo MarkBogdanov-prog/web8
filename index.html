@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechSolutions - Форма обратной связи</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6c63ff;
+            --primary-dark: #5752d4;
+            --secondary: #ff6584;
+            --accent: #42e2b8;
+            --dark: #2d3748;
+            --light: #f8f9fa;
+            --gray: #a0aec0;
+            --success: #48bb78;
+            --error: #f56565;
+            --warning: #ed8936;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+            color: var(--light);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            flex: 1;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            margin-bottom: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .logo-icon {
+            font-size: 2.5rem;
+            color: var(--accent);
+        }
+        
+        h1 {
+            color: var(--light);
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .tagline {
+            color: var(--gray);
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+        
+        .btn-open-form {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            font-size: 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(108, 99, 255, 0.4);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn-open-form:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(108, 99, 255, 0.6);
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--accent);
+        }
+        
+        .feature-card h3 {
+            margin-bottom: 10px;
+            color: var(--light);
+        }
+        
+        .feature-card p {
+            color: var(--gray);
+        }
+        
+        /* Стили для попапа и формы */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+        
+        .popup-content {
+            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            position: relative;
+            max-height: 95vh;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 18px;
+            cursor: pointer;
+            color: var(--light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease;
+        }
+        
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .form-title {
+            margin-bottom: 20px;
+            color: var(--light);
+            text-align: center;
+            font-size: 1.8rem;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--light);
+        }
+        
+        .required::after {
+            content: " *";
+            color: var(--error);
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            font-size: 16px;
+            color: var(--light);
+            transition: all 0.3s ease;
+        }
+        
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(108, 99, 255, 0.3);
+        }
+        
+        input.valid {
+            border-color: var(--success);
+        }
+        
+        input.invalid {
+            border-color: var(--error);
+        }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .checkbox-group input {
+            width: auto;
+            margin-right: 10px;
+            margin-top: 5px;
+        }
+        
+        .checkbox-group label {
+            margin-bottom: 0;
+            line-height: 1.4;
+        }
+        
+        .btn-submit {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            font-size: 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(108, 99, 255, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .btn-submit:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(108, 99, 255, 0.6);
+        }
+        
+        .btn-submit:disabled {
+            background: var(--gray);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .message {
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
+            text-align: center;
+            display: none;
+            font-weight: 500;
+        }
+        
+        .success {
+            background: rgba(72, 187, 120, 0.2);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+        
+        .error {
+            background: rgba(245, 101, 101, 0.2);
+            color: var(--error);
+            border: 1px solid var(--error);
+        }
+        
+        .validation-message {
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .validation-message.error {
+            color: var(--error);
+            display: block;
+        }
+        
+        .validation-message.success {
+            color: var(--success);
+            display: block;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            color: var(--gray);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+        }
+        
+        .social-links a {
+            color: var(--gray);
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .social-links a:hover {
+            color: var(--accent);
+        }
+        
+        .developer-info {
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+        
+        /* Мобильные стили */
+        @media (max-width: 768px) {
+            .popup-content {
+                width: 95%;
+                padding: 20px;
+                max-height: 90vh;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-laptop-code logo-icon"></i>
+                <h1>TechSolutions</h1>
+            </div>
+            <p class="tagline">Инновационные IT-решения для вашего бизнеса. Мы создаем цифровое будущее вместе с вами.</p>
+            <button class="btn-open-form" id="openFormBtn">
+                <i class="fas fa-paper-plane"></i> Связаться с нами
+            </button>
+        </header>
+        
+        <section class="features">
+            <div class="feature-card">
+                <i class="fas fa-code feature-icon"></i>
+                <h3>Веб-разработка</h3>
+                <p>Создаем современные и отзывчивые веб-приложения с использованием передовых технологий.</p>
+            </div>
+            
+            <div class="feature-card">
+                <i class="fas fa-mobile-alt feature-icon"></i>
+                <h3>Мобильные приложения</h3>
+                <p>Разрабатываем кроссплатформенные мобильные приложения для iOS и Android.</p>
+            </div>
+            
+            <div class="feature-card">
+                <i class="fas fa-cloud feature-icon"></i>
+                <h3>Облачные решения</h3>
+                <p>Предоставляем облачную инфраструктуру и услуги для масштабирования вашего бизнеса.</p>
+            </div>
+        </section>
+        
+        <main>
+            <div class="feature-card">
+                <h3>О нашей компании</h3>
+                <p>TechSolutions - это команда опытных разработчиков, дизайнеров и IT-специалистов, которые помогают бизнесу достигать новых высот с помощью технологий. Мы специализируемся на создании инновационных решений, которые делают процессы эффективнее, а пользовательский опыт - приятнее.</p>
+                <p>Свяжитесь с нами сегодня, чтобы обсудить ваш проект!</p>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Попап с формой -->
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup-content">
+            <button class="close-btn" id="closeBtn">
+                <i class="fas fa-times"></i>
+            </button>
+            <h2 class="form-title">Форма обратной связи</h2>
+            
+            <form id="feedbackForm">
+                <div class="form-group">
+                    <label for="fullName" class="required">ФИО</label>
+                    <input type="text" id="fullName" name="fullName" required>
+                    <div class="validation-message" id="fullNameError">Пожалуйста, введите корректное ФИО (минимум 2 слова)</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email" class="required">Email</label>
+                    <input type="email" id="email" name="email" required>
+                    <div class="validation-message" id="emailError">Пожалуйста, введите корректный email</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Телефон</label>
+                    <input type="tel" id="phone" name="phone" placeholder="+7 (XXX) XXX-XX-XX">
+                    <div class="validation-message" id="phoneError">Пожалуйста, введите корректный номер телефона</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="organization">Организация</label>
+                    <input type="text" id="organization" name="organization">
+                </div>
+                
+                <div class="form-group">
+                    <label for="message" class="required">Сообщение</label>
+                    <textarea id="message" name="message" required placeholder="Расскажите о вашем проекте или задайте вопрос..."></textarea>
+                    <div class="validation-message" id="messageError">Сообщение должно содержать не менее 10 символов</div>
+                </div>
+                
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="privacyPolicy" name="privacyPolicy" required>
+                    <label for="privacyPolicy" class="required">Я согласен с политикой обработки персональных данных</label>
+                </div>
+                
+                <button type="submit" class="btn-submit" id="submitBtn">
+                    <i class="fas fa-paper-plane"></i> Отправить сообщение
+                </button>
+                
+                <div class="message" id="messageContainer"></div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2023 TechSolutions. Все права защищены.</p>
+        <div class="social-links">
+            <a href="https://t.me/MarkBogdanov2006" target="_blank" title="Telegram">
+                <i class="fab fa-telegram"></i>
+            </a>
+            <a href="https://vk.com/id404940811" target="_blank" title="ВКонтакте">
+                <i class="fab fa-vk"></i>
+            </a>
+            <a href="https://github.com/MarkBogdanov-prog" target="_blank" title="GitHub">
+                <i class="fab fa-github"></i>
+            </a>
+        </div>
+        <div class="developer-info">
+            Разработано Марком Богдановым
+        </div>
+    </footer>
+
+    <script>
+        // DOM элементы
+        const openFormBtn = document.getElementById('openFormBtn');
+        const closeBtn = document.getElementById('closeBtn');
+        const popupOverlay = document.getElementById('popupOverlay');
+        const feedbackForm = document.getElementById('feedbackForm');
+        const messageContainer = document.getElementById('messageContainer');
+        const submitBtn = document.getElementById('submitBtn');
+        
+        // Элементы для валидации
+        const fullNameInput = document.getElementById('fullName');
+        const emailInput = document.getElementById('email');
+        const phoneInput = document.getElementById('phone');
+        const messageInput = document.getElementById('message');
+        
+        const fullNameError = document.getElementById('fullNameError');
+        const emailError = document.getElementById('emailError');
+        const phoneError = document.getElementById('phoneError');
+        const messageError = document.getElementById('messageError');
+        
+        // Ключ для LocalStorage
+        const STORAGE_KEY = 'feedbackFormData';
+        
+        // Регулярные выражения для валидации
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const phoneRegex = /^(\+7|8)[\s(]?\d{3}[\s)]?\d{3}[\s-]?\d{2}[\s-]?\d{2}$/;
+        const nameRegex = /^[a-zA-Zа-яА-ЯёЁ\s]{2,}(?:\s+[a-zA-Zа-яА-ЯёЁ\s]{2,})+$/;
+        
+        // Открытие формы
+        openFormBtn.addEventListener('click', () => {
+            popupOverlay.style.display = 'flex';
+            // Изменение URL с помощью History API
+            history.pushState({ formOpen: true }, '', '#feedback-form');
+            // Восстановление данных из LocalStorage
+            restoreFormData();
+        });
+        
+        // Закрытие формы
+        closeBtn.addEventListener('click', closeForm);
+        
+        // Закрытие формы при клике вне её области
+        popupOverlay.addEventListener('click', (e) => {
+            if (e.target === popupOverlay) {
+                closeForm();
+            }
+        });
+        
+        // Обработка нажатия кнопки "Назад" в браузере
+        window.addEventListener('popstate', (e) => {
+            if (location.hash !== '#feedback-form') {
+                closeForm();
+            }
+        });
+        
+        // Функция закрытия формы
+        function closeForm() {
+            popupOverlay.style.display = 'none';
+            // Возврат к исходному URL
+            if (location.hash === '#feedback-form') {
+                history.back();
+            }
+        }
+        
+        // Валидация полей формы
+        function validateField(field, regex, errorElement, errorMessage) {
+            const value = field.value.trim();
+            
+            if (field.hasAttribute('required') && value === '') {
+                field.classList.add('invalid');
+                errorElement.textContent = 'Это поле обязательно для заполнения';
+                errorElement.classList.add('error');
+                return false;
+            }
+            
+            if (value !== '' && !regex.test(value)) {
+                field.classList.add('invalid');
+                errorElement.textContent = errorMessage;
+                errorElement.classList.add('error');
+                return false;
+            }
+            
+            field.classList.remove('invalid');
+            field.classList.add('valid');
+            errorElement.classList.remove('error');
+            return true;
+        }
+        
+        // Валидация всей формы
+        function validateForm() {
+            const isNameValid = validateField(
+                fullNameInput, 
+                nameRegex, 
+                fullNameError, 
+                'Пожалуйста, введите корректное ФИО (минимум 2 слова)'
+            );
+            
+            const isEmailValid = validateField(
+                emailInput, 
+                emailRegex, 
+                emailError, 
+                'Пожалуйста, введите корректный email'
+            );
+            
+            const isPhoneValid = phoneInput.value.trim() === '' || validateField(
+                phoneInput, 
+                phoneRegex, 
+                phoneError, 
+                'Пожалуйста, введите корректный номер телефона'
+            );
+            
+            const isMessageValid = validateField(
+                messageInput, 
+                /^.{10,}$/, 
+                messageError, 
+                'Сообщение должно содержать не менее 10 символов'
+            );
+            
+            const isPrivacyChecked = document.getElementById('privacyPolicy').checked;
+            
+            return isNameValid && isEmailValid && isPhoneValid && isMessageValid && isPrivacyChecked;
+        }
+        
+        // События валидации при вводе
+        fullNameInput.addEventListener('input', () => {
+            validateField(
+                fullNameInput, 
+                nameRegex, 
+                fullNameError, 
+                'Пожалуйста, введите корректное ФИО (минимум 2 слова)'
+            );
+        });
+        
+        emailInput.addEventListener('input', () => {
+            validateField(
+                emailInput, 
+                emailRegex, 
+                emailError, 
+                'Пожалуйста, введите корректный email'
+            );
+        });
+        
+        phoneInput.addEventListener('input', () => {
+            if (phoneInput.value.trim() !== '') {
+                validateField(
+                    phoneInput, 
+                    phoneRegex, 
+                    phoneError, 
+                    'Пожалуйста, введите корректный номер телефона'
+                );
+            } else {
+                phoneInput.classList.remove('invalid', 'valid');
+                phoneError.classList.remove('error');
+            }
+        });
+        
+        messageInput.addEventListener('input', () => {
+            validateField(
+                messageInput, 
+                /^.{10,}$/, 
+                messageError, 
+                'Сообщение должно содержать не менее 10 символов'
+            );
+        });
+        
+        // Сохранение данных формы в LocalStorage
+        function saveFormData() {
+            const formData = {
+                fullName: fullNameInput.value,
+                email: emailInput.value,
+                phone: phoneInput.value,
+                organization: document.getElementById('organization').value,
+                message: messageInput.value,
+                privacyPolicy: document.getElementById('privacyPolicy').checked
+            };
+            
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+        }
+        
+        // Восстановление данных формы из LocalStorage
+        function restoreFormData() {
+            const savedData = localStorage.getItem(STORAGE_KEY);
+            
+            if (savedData) {
+                const formData = JSON.parse(savedData);
+                
+                fullNameInput.value = formData.fullName || '';
+                emailInput.value = formData.email || '';
+                phoneInput.value = formData.phone || '';
+                document.getElementById('organization').value = formData.organization || '';
+                messageInput.value = formData.message || '';
+                document.getElementById('privacyPolicy').checked = formData.privacyPolicy || false;
+                
+                // Валидация восстановленных данных
+                if (fullNameInput.value) validateField(
+                    fullNameInput, 
+                    nameRegex, 
+                    fullNameError, 
+                    'Пожалуйста, введите корректное ФИО (минимум 2 слова)'
+                );
+                
+                if (emailInput.value) validateField(
+                    emailInput, 
+                    emailRegex, 
+                    emailError, 
+                    'Пожалуйста, введите корректный email'
+                );
+                
+                if (phoneInput.value) validateField(
+                    phoneInput, 
+                    phoneRegex, 
+                    phoneError, 
+                    'Пожалуйста, введите корректный номер телефона'
+                );
+                
+                if (messageInput.value) validateField(
+                    messageInput, 
+                    /^.{10,}$/, 
+                    messageError, 
+                    'Сообщение должно содержать не менее 10 символов'
+                );
+            }
+        }
+        
+        // Очистка данных формы в LocalStorage
+        function clearFormData() {
+            localStorage.removeItem(STORAGE_KEY);
+            
+            // Очистка полей формы
+            fullNameInput.value = '';
+            emailInput.value = '';
+            phoneInput.value = '';
+            document.getElementById('organization').value = '';
+            messageInput.value = '';
+            document.getElementById('privacyPolicy').checked = false;
+            
+            // Сброс стилей валидации
+            const inputs = document.querySelectorAll('input, textarea');
+            inputs.forEach(input => {
+                input.classList.remove('valid', 'invalid');
+            });
+            
+            const errorMessages = document.querySelectorAll('.validation-message');
+            errorMessages.forEach(msg => {
+                msg.classList.remove('error');
+            });
+        }
+        
+        // Сохранение данных при изменении полей формы
+        feedbackForm.addEventListener('input', saveFormData);
+        document.getElementById('privacyPolicy').addEventListener('change', saveFormData);
+        
+        // Отправка формы
+        feedbackForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!validateForm()) {
+                showMessage('Пожалуйста, исправьте ошибки в форме', 'error');
+                return;
+            }
+            
+            // Блокировка кнопки отправки
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Отправка...';
+            
+            try {
+                // Сбор данных формы
+                const formData = new FormData(feedbackForm);
+                const data = Object.fromEntries(formData);
+                
+                // Отправка данных на сервер (пример с использованием Formspree)
+                // Замените URL на ваш endpoint от formcarry.com, slapform.com или другого сервиса
+                const response = await fetch('https://formspree.io/f/xdoqjqgp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+                
+                if (response.ok) {
+                    // Успешная отправка
+                    showMessage('Сообщение успешно отправлено! Мы свяжемся с вами в ближайшее время.', 'success');
+                    clearFormData();
+                    // Закрытие формы через 3 секунды
+                    setTimeout(() => {
+                        closeForm();
+                    }, 3000);
+                } else {
+                    // Ошибка отправки
+                    throw new Error('Ошибка отправки формы');
+                }
+            } catch (error) {
+                // Ошибка сети или другая ошибка
+                console.error('Ошибка:', error);
+                showMessage('Произошла ошибка при отправке формы. Пожалуйста, попробуйте еще раз.', 'error');
+            } finally {
+                // Разблокировка кнопки отправки
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Отправить сообщение';
+            }
+        });
+        
+        // Функция отображения сообщения
+        function showMessage(text, type) {
+            messageContainer.textContent = text;
+            messageContainer.className = `message ${type}`;
+            messageContainer.style.display = 'block';
+            
+            // Автоматическое скрытие сообщения через 5 секунд
+            setTimeout(() => {
+                messageContainer.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Инициализация: восстановление данных при загрузке страницы
+        document.addEventListener('DOMContentLoaded', () => {
+            // Если в URL есть хеш формы, открываем форму
+            if (location.hash === '#feedback-form') {
+                openFormBtn.click();
+            }
+        });
+    </script>
+</body>
+</html>
